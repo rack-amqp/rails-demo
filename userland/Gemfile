@@ -51,4 +51,4 @@ group :development, :test do
   gem 'database_cleaner'
 end
 
-gem 'rack-amqp', path: '../rack-amqp'
+gem 'jackalope', path: '../../jackalope'
