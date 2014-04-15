@@ -1,5 +1,8 @@
 module UserlandClient
   class User
+
+    BASEPATH = '/users'
+
     include Virtus.model
 
     attribute :id, Integer
@@ -8,8 +11,17 @@ module UserlandClient
     attribute :created_at, Time
     attribute :updated_at, Time
 
+    def to_json
+      attributes.to_json
+    end
+
+    def save
+      result = UserlandAdapter.post("#{BASEPATH}/#{id}", body: to_json)
+      result
+    end
+
     def self.login(login, password)
-      response = Userland.get('/users/login', body: {login: login, password: password})
+      response = UserlandAdapter.get("#{BASEPATH}/login", body: {login: login, password: password})
       if response.code == 200
         parsed_user_from_response(response)
       else

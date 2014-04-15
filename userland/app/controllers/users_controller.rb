@@ -20,6 +20,15 @@ class UsersController < ApplicationController
     respond_with user
   end
 
+  def login
+    @user = User.where(login: params[:login], password: params[:password]).first
+    if @user
+      render json: @user.to_json, status: 200
+    else
+      render nothing: true, status: 401
+    end
+  end
+
   private
 
   def user_params
