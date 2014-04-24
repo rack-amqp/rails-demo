@@ -1,8 +1,17 @@
+class Time
+  def to_msgpack(*args)
+    self.to_i.to_msgpack(*args)
+  end
+end
 class UsersController < ApplicationController
-  respond_to :json
+  respond_to :json, :msgpack, :protobuf, :marshall
 
   def index
-    respond_with User.all
+    respond_to do |fmt|
+      fmt.json { render json: users }
+      fmt.msgpack { send_data MessagePack.pack(users.as_json) }
+      fmt.protobuf { d = Userland::Users.new; d.user = users.map(&:to_pb); send_data d.serialize_to_string }
+    end
   end
 
   def create
@@ -33,5 +42,10 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:login, :password)
+  end
+
+  def users
+    #Rails.cache.fetch('us'){ [User.all, User.all, User.all, User.all] }
+    [User.all, User.all, User.all, User.all].flatten
   end
 end

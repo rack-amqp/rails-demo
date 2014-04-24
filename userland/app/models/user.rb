@@ -10,9 +10,22 @@
 #  updated_at :datetime
 #
 
+require_relative '../../userland.pb'
 class User < ActiveRecord::Base
 
   def self.login(login, password)
     User.where(login: login, password: password).first
+  end
+
+  def to_pb
+    pb = Userland::User.new
+    attributes.each do |k,v|
+      if k =~ /_at/
+        pb.send("#{k}=", v.to_i)
+      else
+        pb.send("#{k}=",v)
+      end
+    end
+    pb
   end
 end

@@ -1,0 +1,13 @@
+package userland;
+message Users {
+  repeated User user = 1;
+}
+
+message User {
+  required int32 id = 1;
+  required string login = 2;
+  optional string password = 3;
+  optional int32 created_at = 4;
+  optional int32 updated_at = 5;
+}
+
