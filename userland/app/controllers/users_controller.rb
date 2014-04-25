@@ -8,9 +8,17 @@ class UsersController < ApplicationController
 
   def index
     respond_to do |fmt|
-      fmt.json { render json: users }
-      fmt.msgpack { send_data MessagePack.pack(users.as_json) }
-      fmt.protobuf { d = Userland::Users.new; d.user = users.map(&:to_pb); send_data d.serialize_to_string }
+      fmt.json do
+        render json: users
+      end
+      fmt.msgpack do
+        send_data MessagePack.pack(users.as_json)
+      end
+      fmt.protobuf do
+        d = Userland::Users.new
+        d.user = users.map(&:to_pb)
+        send_data d.serialize_to_string
+      end
     end
   end
 
